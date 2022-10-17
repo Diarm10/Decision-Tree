@@ -1,0 +1,31 @@
+rm(list=ls())
+Data <- read.csv("Project Data.csv", header=TRUE, sep=";")
+install.packages ("partykit")
+install.packages ("party")
+install.packages("rpart")
+library("partykit")
+library("rpart")
+library("party")
+attach(Data)
+
+Data<-rpart(Weight~Height, method="anova", control=rpart.control(minsplit=5,minbucket=2, maxdepth=4))
+
+Fig1 <- plot(as.party(Data))
+print(Data)
+summary(Data)
+rsq.rpart(Data)
+
+plot(as.party(Data))
+print(Data)
+Data <- rpart(Response~X1+X2+X3+X4+X5+X6+X7+Y1+Y2+Y3+Y4+Y5+Y6+Y7,data=Data)
+plot(as.party(Data))
+print(Data)
+print(Data$cptable)
+
+pred = predict(Data, type="class")
+table(pred)
+table(pred, Data$Response)
+
+Data <-rpart(RESPONSE~., data=Data, control=rpart.control(minsplit=60, minbucket=30, maxdepth=4))
+Data<-rpart(Target~., data=Data)
+Plot(as.party(Data))
